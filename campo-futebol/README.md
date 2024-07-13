@@ -4,7 +4,7 @@ Projeto final de IA focado no monitoramento de um campo de futebol através de a
 
 # <img src="https://github.com/user-attachments/assets/930034b3-9bb0-41ee-9b57-308f0d964a55" style="width: 55px;" align="center"/> Sobre o Projeto
 
-- Este projeto utiliza um estudo de caso baseado no vídeo ``footbalfield.mp4`` para demonstrar técnicas de visão computacional;
+- Este projeto utiliza um estudo de caso baseado no vídeo ``footballfield.mp4`` para demonstrar técnicas de visão computacional;
 - O objetivo principal é a identificação e análise da **zona central do campo** para contagem de pessoas;
 - O projeto lida e trata este circulo central citado, como **zona de interesse**;
 - A implementação inclui técnicas avançadas de processamento de imagens para alcançar uma precisão na contagem.
