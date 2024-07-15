@@ -8,6 +8,7 @@ env-visao/
 yolov3.weights
 yolov3-tiny.weights
 frozen_inference_graph.pb
+ssd_mobilenet_v2_coco.pbtxt
 
 # Ignorar arquivos de log e de saída do Jupyter Notebook
 *.log
