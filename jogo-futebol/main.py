@@ -2,9 +2,9 @@ import cv2
 import numpy as np
 
 # Caminhos dos arquivos
-ARQUIVO_VIDEO = '/home/igor/IA/visao-computacional/rastreio-pessoas/walking.mp4'
-ARQUIVO_MODELO = '/home/igor/IA/visao-computacional/rastreio-pessoas/frozen_inference_graph.pb'
-ARQUIVO_CFG = '/home/igor/IA/visao-computacional/rastreio-pessoas/ssd_mobilenet_v2_coco.pbtxt'
+ARQUIVO_VIDEO = '/home/igor/IA/visao-computacional/jogo-futebol/soccer.mp4'
+ARQUIVO_MODELO = '/home/igor/IA/visao-computacional/jogo-futebol/frozen_inference_graph.pb'
+ARQUIVO_CFG = '/home/igor/IA/visao-computacional/jogo-futebol/ssd_mobilenet_v2_coco.pbtxt'
 
 def carregar_modelo(ARQUIVO_MODELO, ARQUIVO_CFG):
     '''
@@ -39,6 +39,7 @@ def main():
     captura = cv2.VideoCapture(ARQUIVO_VIDEO)
     detector_pessoas = carregar_modelo(ARQUIVO_MODELO, ARQUIVO_CFG)
     pausado = False
+    pessoas_detectadas = set()
 
     while True:
         if not pausado:
@@ -51,26 +52,22 @@ def main():
             detector_pessoas.setInput(blob)
             deteccoes = detector_pessoas.forward()
 
-            caixas = []
-            confiancas = []
-
-            # Extração das caixas delimitadoras e confianças das detecções
+            # Contagem de pessoas detectadas
+            pessoas_detectadas.clear() 
             for i in range(deteccoes.shape[2]):
                 confianca = deteccoes[0, 0, i, 2]
                 if confianca > 0.5:
-                    (altura, largura) = frame.shape[:2]
-                    caixa = deteccoes[0, 0, i, 3:7] * np.array([largura, altura, largura, altura])
-                    (inicioX, inicioY, fimX, fimY) = caixa.astype("int")
-                    caixas.append([inicioX, inicioY, fimX - inicioX, fimY - inicioY])
-                    confiancas.append(float(confianca))
+                    classe_id = int(deteccoes[0, 0, i, 1])
+                    if classe_id == 1:  # Se for o ID da classe de pessoas
+                        pessoas_detectadas.add(i)  # Adiciona o ID da detecção ao conjunto
 
-            # Aplicação da supressão não máxima para finalizar as caixas delimitadoras
-            caixas_finais = aplicar_supressao_nao_maxima(caixas, confiancas, limiar_conf=0.5, limiar_supr=0.4)
-            numero_pessoas = len(caixas_finais)
+            numero_pessoas = len(pessoas_detectadas)
 
             # Desenho das caixas e exibição do número de pessoas detectadas
-            for (inicioX, inicioY, largura, altura) in caixas_finais:
-                cv2.rectangle(frame, (inicioX, inicioY), (inicioX + largura, inicioY + altura), (0, 255, 0), 2)
+            for idx in pessoas_detectadas:
+                caixa = deteccoes[0, 0, idx, 3:7] * np.array([frame.shape[1], frame.shape[0], frame.shape[1], frame.shape[0]])
+                (inicioX, inicioY, fimX, fimY) = caixa.astype("int")
+                cv2.rectangle(frame, (inicioX, inicioY), (fimX, fimY), (0, 255, 0), 2)
             cv2.putText(frame, f"Pessoas: {numero_pessoas}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
         # Exibição do frame processado e controle de pausa/play
