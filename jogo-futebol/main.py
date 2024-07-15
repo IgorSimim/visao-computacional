@@ -59,7 +59,7 @@ def main():
                 if confianca > 0.5:
                     classe_id = int(deteccoes[0, 0, i, 1])
                     if classe_id == 1:  # Se for o ID da classe de pessoas
-                        pessoas_detectadas.add(i)  # Adiciona o ID da detecção ao conjunto
+                        pessoas_detectadas.add(i)
 
             numero_pessoas = len(pessoas_detectadas)
 
