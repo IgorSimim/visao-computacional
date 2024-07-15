@@ -34,7 +34,7 @@ def aplicar_supressao_nao_maxima(caixas, confiancas, limiar_conf, limiar_supr):
 
 def main():
     '''
-    Função principal que executa o rastreio de pessoas no vídeo.
+    Função principal que executa a busca de pessoas no vídeo.
     '''
     captura = cv2.VideoCapture(ARQUIVO_VIDEO)
     detector_pessoas = carregar_modelo(ARQUIVO_MODELO, ARQUIVO_CFG)
